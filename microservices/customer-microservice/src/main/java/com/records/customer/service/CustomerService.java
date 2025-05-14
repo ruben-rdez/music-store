@@ -36,7 +36,8 @@ public class CustomerService {
         logger.info("Getting customer by ID: {}", customerId);
         return customerRepository.findById(customerId)
             .map(customerMapper::toCustomerResponse)
-            .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+            .orElseThrow(() -> new CustomerNotFoundException(
+                String.format("Customer with ID %s not found", customerId)));
     }
 
     public String saveCustomer(CustomerRequest customerRequest) {
@@ -48,7 +49,8 @@ public class CustomerService {
     public void deleteCustomer(String customerId) {
         logger.info("Deleting customer by ID: {}", customerId);
         customerRepository.findById(customerId)
-            .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+            .orElseThrow(() -> new CustomerNotFoundException(String.format(
+                "Customer with ID %s not found", customerId)));
         customerRepository.deleteById(customerId);
     }
 
@@ -66,6 +68,7 @@ public class CustomerService {
                 return customerMapper.toCustomerResponse(
                     customerRepository.save(customer));
             })
-            .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+            .orElseThrow(() -> new CustomerNotFoundException(String.format(
+                "Customer with ID %s not found", customerRequest.id())));
     }    
 }
